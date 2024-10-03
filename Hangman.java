@@ -12,8 +12,36 @@ public class Hangman
 {
     public static void main(String[]args) throws FileNotFoundException, IOException 
     {
+        Scanner scanner = new Scanner(System.in);
+            
         Random random = new Random();
         List<String>words = getwords("words.txt");
+        String mode = "";
+        System.out.println("What mode do you want?");
+        mode = scanner.nextLine();
+        int limitstrikes = 0;
+        ArrayList<String> modes = new ArrayList<>();
+        modes.add("easy");
+        modes.add("normal");
+        modes.add("hard");
+        while(!(modes.contains(mode)))
+        {
+            System.out.println("Incorrect mode. Try again");
+            mode = scanner.nextLine();
+
+        }
+        if(mode.equals("easy"))
+        {
+            limitstrikes = 9;
+        }
+        else if(mode.equals("normal"))
+        {
+            limitstrikes = 6;
+        }
+        else if(mode.equals("hard"))
+        {
+            limitstrikes = 4;
+        }
         int index = random.nextInt(words.size());
         String mysteryword = words.get(index);
         System.out.println("Guess the mystery word.");
@@ -21,7 +49,7 @@ public class Hangman
         Set<Character> filled = new HashSet<>();
         Set<Character> incorrect = new HashSet<>();
         int strikes = 0;
-        String outcome = guess(filledstring, mysteryword, filled, incorrect, strikes);
+        String outcome = guess(filledstring, mysteryword, filled, incorrect, strikes, limitstrikes);
         System.out.println(outcome);
         
     }
@@ -43,9 +71,9 @@ public class Hangman
         }
         return words;
     }
-    private static String guess(String filledString, String mysteryword, Set<Character>filled, Set<Character>incorrect, int strikes)
+    private static String guess(String filledString, String mysteryword, Set<Character>filled, Set<Character>incorrect, int strikes, int limitstrikes)
     {
-        if(strikes == 6)
+        if(strikes == limitstrikes)
         {
             return "You've lost! The word was "+mysteryword;   
         }
@@ -127,7 +155,7 @@ public class Hangman
                 }
                
                 System.out.println("Word: "+filledString);
-                return guess(filledString, mysteryword, filled, incorrect, strikes);
+                return guess(filledString, mysteryword, filled, incorrect, strikes, limitstrikes);
             }
             
             
